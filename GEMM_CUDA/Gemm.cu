@@ -1,9 +1,7 @@
-
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 #include <cublas_v2.h>
 #include <stdio.h>
-
 
 cublasStatus_t Sgemm(
 	cublasHandle_t Blas,
@@ -32,7 +30,6 @@ cublasStatus_t Sgemm(
 
 	return cublasSgemm(Blas, BOp, AOp, m, n, k, &Alpha, dev_B, ldb, dev_A, lda, &Beta, dev_C, m);
 }
-
 
 
 __global__ void kernel_col2im_gpu(float* __restrict__ output, float* __restrict__ input, int N, int K, int P, int Q, int tcount)
@@ -73,25 +70,18 @@ __global__ void kernel_im2col_gpu2(float* __restrict__ output, float* __restrict
 
 	if (tid >= tcount) return;
 
-	int q_idx  = tid % Q;
+	int q_idx = tid % Q;
 	int idx = tid / Q;
-
 	int p_idx = idx % P;
 	idx /= P;
-
 	int b_idx = idx % N;
 	idx /= N;
-
 	int kw_idx = idx % KW;
 	idx /= KW;
-
 	int kh_idx = idx % KH;
 	idx /= KH;
-
 	int k_idx = kw_idx + kh_idx * KW;
-
 	int c_idx = idx % C;
-
 	int w_idx = q_idx * SW - left + kw_idx;
 	int h_idx = p_idx * SH - top + kh_idx;
 
@@ -108,39 +98,32 @@ __global__ void kernel_im2col_gpu2(float* __restrict__ output, float* __restrict
 		int s_idx = b_idx * C * H * W + c_idx * H * W + h_idx * W + w_idx;
 		output[n_index2] = input[s_idx];
 	}
-
-
 }
-
-
-
 
 void conv2d_im2col_gpu2(float* output, float* input, int N, int K, int P, int Q, int C, int H, int W, int KH, int KW, int SH, int SW, int left, int top, cudaStream_t stream)
 {
 	int tcount2 = C * KH * KW * N * P * Q;
-
 	int threadX2 = 512;
-
 	int blockX2 = (tcount2 + threadX2 - 1) / threadX2;
 
 	dim3 grid(blockX2, 1, 1);
 	dim3 block(threadX2, 1, 1);
 
-
 	kernel_im2col_gpu2 << <grid, block, 0, stream >> > (output, input, N, P, Q, C, H, W, KH, KW, SH, SW, left, top, tcount2);
 }
 
 
-
 void conv2d_gemm(float* f_output, float* output, float * sgemmout, const float* weight, float* input, int N, int K, int P, int Q, int C, int H, int W, int KH, int KW, int SH, int SW, int left, int top, cudaStream_t stream,
-	cublasHandle_t Blas, cublasOperation_t AOp, cublasOperation_t BOp, float Alpha = 1.0f, float Beta = 0.0f)
+	cublasHandle_t Blas, cublasOperation_t AOp, cublasOperation_t BOp)
 {
 	conv2d_im2col_gpu2(output, input, N, K, P, Q, C, H, W, KH, KW, SH, SW, left, top, stream);
 
 	Sgemm(Blas, AOp, BOp, weight, KW * KH * C, K, output, P * Q * N, KH * KW * C, sgemmout);
 
 	conv2d_col2im_gpu(f_output, sgemmout, N, K, P, Q, stream);
-
 }
 
-
+extern "C" void tt()
+{
+	int a = 0;
+}

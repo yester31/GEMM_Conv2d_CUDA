@@ -1,38 +1,10 @@
-﻿#pragma once
-#include <vector>
+﻿#include <vector>
 #include <iostream>
-#include <helper_cuda.h> 
 #include <iomanip>
+//#include <helper_cuda.h> 
+#include <cuda_runtime.h>
 
-using namespace std;
-using namespace chrono;
-
-#if defined(NDEBUG)
-#define CUDA_CHECK(x) (x) // release mode
-#else //debug mode
-#define CUDA_CHECK(x) do{\
-		(x); \
-cudaError_t e = cudaGetLastError();\
-if(cudaSuccess != e){\
-	printf("cuda failure \n *** %s ***\n at %s :: line_  %d\n",\
-			cudaGetErrorString(e), \
-			__FILE__, __LINE__); \
-		exit(1);\
-	}\
-}while(0)
-#endif
-
-cublasStatus_t Sgemm(cublasHandle_t Blas, cublasOperation_t AOp, cublasOperation_t BOp, const float* dev_A, int WidthA, int HeightA, const float* dev_B, int WidthB, int HeightB, float *dev_C, float Alpha = 1.0f, float Beta = 0.0f);
-
-void conv2d_im2col_gpu2(float* output, float* input, int N, int K, int P, int Q, int C, int H, int W, int KH, int KW, int SH, int SW, int left, int top, cudaStream_t stream);
-
-void conv2d_col2im_gpu(float* output, float* input, int N, int K, int P, int Q, cudaStream_t stream);
-
-void conv2d_gemm(float* f_output, float* output, float * sgemmout, const float* weight, float* input, int N, int K, int P, int Q, int C, int H, int W, int KH, int KW, int SH, int SW, int left, int top, cudaStream_t stream,
-	cublasHandle_t Blas, cublasOperation_t AOp, cublasOperation_t BOp, float Alpha = 1.0f, float Beta = 0.0f);
-
-
-void convolution(vector<float>& convOutput, vector<float>& convInput, vector<float>& kernel, int kernelSize, int stride, int input_n, int input_c, int input_h, int input_w, int ouput_c) {
+void convolution(std::vector<float>& convOutput, std::vector<float>& convInput, std::vector<float>& kernel, int kernelSize, int stride, int input_n, int input_c, int input_h, int input_w, int ouput_c) {
 	int outputHeightSize = ((input_h - kernelSize) / stride) + 1;
 	int outputWidthSize = ((input_w - kernelSize) / stride) + 1;
 	//Conv_output.resize(input_n * Ouput_C * outputHeightSize * outputHeightSize);
@@ -78,7 +50,7 @@ void convolution(vector<float>& convOutput, vector<float>& convInput, vector<flo
 	}
 }
 
-void zeroPadding(vector<float>& zeroPaddingOutput, vector<float>& zeroPaddingInput, int input_n, int input_c, int input_h, int input_w, int leftPadingSize, int rightPadingSize, int topPadingSize, int bottomPadingSize) {
+void zeroPadding(std::vector<float>& zeroPaddingOutput, std::vector<float>& zeroPaddingInput, int input_n, int input_c, int input_h, int input_w, int leftPadingSize, int rightPadingSize, int topPadingSize, int bottomPadingSize) {
 
 	int temp1 = input_w * input_h * input_c;
 	int temp1o = (input_h + topPadingSize + bottomPadingSize) * (input_w + leftPadingSize + rightPadingSize) * input_c;
@@ -134,8 +106,8 @@ void deviceQuery()
 		printf("  CUDA Driver Version / Runtime Version          %d.%d / %d.%d\n", driverVersion / 1000, (driverVersion % 100) / 10, runtimeVersion / 1000, (runtimeVersion % 100) / 10);
 		printf("  CUDA Capability Major/Minor version number:    %d.%d\n", deviceProp.major, deviceProp.minor);
 		printf("  Multiprocessors (MP) :                         %d\n", deviceProp.multiProcessorCount);
-		printf("  CUDA Cores/MP :                                %d\n", _ConvertSMVer2Cores(deviceProp.major, deviceProp.minor));
-		printf("  CUDA Cores :                                   %d\n", _ConvertSMVer2Cores(deviceProp.major, deviceProp.minor) * deviceProp.multiProcessorCount);
+		//printf("  CUDA Cores/MP :                                %d\n", _ConvertSMVer2Cores(deviceProp.major, deviceProp.minor));
+		//printf("  CUDA Cores :                                   %d\n", _ConvertSMVer2Cores(deviceProp.major, deviceProp.minor) * deviceProp.multiProcessorCount);
 		printf("  Total amount of shared memory per block:       %llu bytes\n", deviceProp.sharedMemPerBlock);
 		printf("  Total number of registers available per block: %d\n", deviceProp.regsPerBlock);
 		printf("  Maximum number of threads per block:           %d\n", deviceProp.maxThreadsPerBlock);
@@ -143,7 +115,7 @@ void deviceQuery()
 	printf("\n");
 }
 
-void valueCheck(vector<float>& valueCheckInput, int input_n, int input_c, int input_h, int input_w, int offset = 0) {
+void valueCheck(std::vector<float>& valueCheckInput, int input_n, int input_c, int input_h, int input_w, int offset = 0) {
 	if (offset == 1) { input_n = 1; }
 
 	int temp1 = input_w * input_h * input_c;
@@ -170,21 +142,19 @@ void valueCheck(vector<float>& valueCheckInput, int input_n, int input_c, int in
 	}std::cout << std::endl;
 }
 
-void inititalizedData(vector<float>& container)
+void inititalizedData(std::vector<float>& container)
 {
 	int count = 1;
-	for (vector<int>::size_type i = 0; i < container.size(); i++) {
+	for (std::vector<int>::size_type i = 0; i < container.size(); i++) {
 		container[i] = count;
 		count++;
 	}
 }
 
-void inititalizedDataOne(vector<float>& container)
+void inititalizedDataOne(std::vector<float>& container)
 {
 	int count = 1;
-	for (vector<int>::size_type i = 0; i < container.size(); i++) {
+	for (std::vector<int>::size_type i = 0; i < container.size(); i++) {
 		container[i] = count;
 	}
 }
-
-

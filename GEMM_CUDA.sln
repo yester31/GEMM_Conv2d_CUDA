@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.28307.852
+VisualStudioVersion = 15.0.28307.1525
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gemm", "Gemm\Gemm.vcxproj", "{56C5BB31-9BFC-4BF2-824B-BF34C8081D5E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GEMM_CUDA", "GEMM_CUDA\GEMM_CUDA.vcxproj", "{AD727473-1F40-48F5-9E24-A7C27D3C4925}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{56C5BB31-9BFC-4BF2-824B-BF34C8081D5E}.Debug|x64.ActiveCfg = Debug|x64
-		{56C5BB31-9BFC-4BF2-824B-BF34C8081D5E}.Debug|x64.Build.0 = Debug|x64
-		{56C5BB31-9BFC-4BF2-824B-BF34C8081D5E}.Release|x64.ActiveCfg = Release|x64
-		{56C5BB31-9BFC-4BF2-824B-BF34C8081D5E}.Release|x64.Build.0 = Release|x64
+		{AD727473-1F40-48F5-9E24-A7C27D3C4925}.Debug|x64.ActiveCfg = Debug|x64
+		{AD727473-1F40-48F5-9E24-A7C27D3C4925}.Debug|x64.Build.0 = Debug|x64
+		{AD727473-1F40-48F5-9E24-A7C27D3C4925}.Release|x64.ActiveCfg = Release|x64
+		{AD727473-1F40-48F5-9E24-A7C27D3C4925}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {DB78CBCD-5E69-4279-89F9-0E0F9DAFBE3E}
+		SolutionGuid = {BEAE3E33-6505-43BF-9ABE-C968A73E0567}
 	EndGlobalSection
 EndGlobal
