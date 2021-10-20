@@ -30,7 +30,7 @@ void zeroPadding(std::vector<float>& zeroPaddingOutput, std::vector<float>& zero
 
 void deviceQuery();
 
-void valueCheck(std::vector<float>& valueCheckInput, int input_n, int input_c, int input_h, int input_w, int offset);
+void valueCheck(std::vector<float>& valueCheckInput, int input_n, int input_c, int input_h, int input_w, int offset =0);
 
 void inititalizedData(std::vector<float>& container);
 

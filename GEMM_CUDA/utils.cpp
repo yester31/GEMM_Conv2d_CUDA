@@ -115,7 +115,7 @@ void deviceQuery()
 	printf("\n");
 }
 
-void valueCheck(std::vector<float>& valueCheckInput, int input_n, int input_c, int input_h, int input_w, int offset = 0) {
+void valueCheck(std::vector<float>& valueCheckInput, int input_n, int input_c, int input_h, int input_w, int offset) {
 	if (offset == 1) { input_n = 1; }
 
 	int temp1 = input_w * input_h * input_c;

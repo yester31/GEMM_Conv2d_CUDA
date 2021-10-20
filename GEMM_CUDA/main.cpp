@@ -9,22 +9,30 @@
 
 typedef struct {
 	int N;
-	int C, H, W; // data [N,C,H,W]
-	int K, P, Q; // output [N,K,P,Q]
-	int KH, KW; // weight height, width
+	int C, H, W;// data [N,C,H,W]
+	int K, P, Q;// output [N,K,P,Q]
+	int KH, KW;	// weight height, width
 	int SH, SW;
 	int left, right, top, bottom; // pad left, right, top, bottom
 } Config;
 
 std::vector<Config> config{
-	//{10,10,10,10,    10, 8, 10,		3, 3,  1,1,		0,0,0,0 }
-	{3,128,240,240,  64, 240, 240,	3, 3,  1,1,		1,1,1,1}
+	//N,C,H,W  K,P,Q  KH,KW  SH,SW  L,R,T,B
+	{1,1,5,5,  1,0,0,  3,3,  1,1,  0,0,0,0}
+	//{10,10,10,10,  10,8,10,  3,3,  1,1,  0,0,0,0}
+	//{3,128,240,240,  64,240,240,  3,3,  1,1,  1,1,1,1}
 };
 
-extern "C" void tt();
+void tofile(std::vector<float> &Buffer, std::string fname) {
+	std::ofstream fs(fname, std::ios::binary);
+	if (fs.is_open())
+		fs.write((const char*)Buffer.data(), Buffer.size() * sizeof(float));
+	fs.close();
+	std::cout << "the output file produced in output folder." << std::endl;
+}
 
 int main() {
-	tt();
+
 	deviceQuery();
 	cudaSetDevice(0);
 	cudaStream_t stream;
@@ -45,12 +53,12 @@ int main() {
 	std::vector<float> weight(c.K*c.C*c.KH*c.KW); // weight [K,C,3,3]
 
 	inititalizedData(data);			//  1씩 증가하는 등차수열 
-	inititalizedData(weight);		//  1씩 증가하는 등차수열 
+	inititalizedDataOne(weight);		//  1씩 증가하는 등차수열 
 
-	//cout << "Data(Input)" << endl;
-	//valueCheck(data, c.N, c.C, c.H, c.W);		//입력값 확인
-	//cout << "kernel" << endl;
-	//valueCheck(weight, c.K, c.C, c.KH, c.KW);	// 가중치 확인
+	std::cout << "Data(Input)" << std::endl;
+	valueCheck(data, c.N, c.C, c.H, c.W, 1);		//입력값 확인
+	std::cout << "kernel" << std::endl;
+	valueCheck(weight, c.K, c.C, c.KH, c.KW, 1);	// 가중치 확인
 	//valueCheck(weight, 1, 1, c.K, c.C * c.KH * c.KW);	// 가중치 확인
 
 	float* d_weight; // device input data
@@ -104,7 +112,7 @@ int main() {
 	printf("   Gemm       avg_dur_time=%6.3f[msec] checksum=%.6f\n", total_time / 1000.f / ITER, checksum);
 
 	//valueCheck(m_output, 1, 1, c.K, c.P * c.Q * c.N);		// 결과값 확인
-	//valueCheck(m_output, c.N, c.K, c.P, c.Q, 1);			// 결과값 확인
+	valueCheck(m_output, c.N, c.K, c.P, c.Q, 1);			// 결과값 확인
 
 	cudaFree(d_data);
 	cudaFree(d_weight);
