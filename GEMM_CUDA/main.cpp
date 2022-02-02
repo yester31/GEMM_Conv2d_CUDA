@@ -53,12 +53,12 @@ int main() {
 	std::vector<float> weight(c.K*c.C*c.KH*c.KW); // weight [K,C,3,3]
 
 	inititalizedData(data);			//  1씩 증가하는 등차수열 
-	inititalizedDataOne(weight);		//  1씩 증가하는 등차수열 
+	inititalizedDataOne(weight);	//  1씩 증가하는 등차수열 
 
 	std::cout << "Data(Input)" << std::endl;
-	valueCheck(data, c.N, c.C, c.H, c.W, 1);		//입력값 확인
+	valueCheck(data, c.N, c.C, c.H, c.W, 1);	//입력값 확인
 	std::cout << "kernel" << std::endl;
-	valueCheck(weight, c.K, c.C, c.KH, c.KW, 1);	// 가중치 확인
+	valueCheck(weight, c.K, c.C, c.KH, c.KW, 1);// 가중치 확인
 	//valueCheck(weight, 1, 1, c.K, c.C * c.KH * c.KW);	// 가중치 확인
 
 	float* d_weight; // device input data

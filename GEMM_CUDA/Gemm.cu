@@ -122,8 +122,3 @@ void conv2d_gemm(float* f_output, float* output, float * sgemmout, const float* 
 
 	conv2d_col2im_gpu(f_output, sgemmout, N, K, P, Q, stream);
 }
-
-extern "C" void tt()
-{
-	int a = 0;
-}

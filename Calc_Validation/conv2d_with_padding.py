@@ -25,10 +25,10 @@ p2d = (LP, RP, TP, BP)
 input_padded = torch.nn.functional.pad(input, p2d, "constant", 0)
 print(input_padded)
 
-conservertive_convolution = torch.nn.Conv2d(IC, OC, (KH, KH), stride=(1, 1), bias=False)
-conservertive_convolution.weight = torch.nn.Parameter(weight)
+convolution = torch.nn.Conv2d(IC, OC, (KH, KH), stride=(1, 1), bias=False)
+convolution.weight = torch.nn.Parameter(weight)
 
-output = conservertive_convolution(input_padded)
+output = convolution(input_padded)
 print(output)
 
 output_c = np.fromfile("../output/C_Tensor_zp", dtype=np.float32)

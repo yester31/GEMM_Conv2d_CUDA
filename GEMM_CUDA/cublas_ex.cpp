@@ -34,6 +34,8 @@ void printArrayS(dtype *ptr, int rows, int cols, char mode, char *name)
 		printf("\n");
 	}
 }
+
+// cublas example
 int main(int argc, char* argv[])
 {
 	cudaSetDevice(0);
