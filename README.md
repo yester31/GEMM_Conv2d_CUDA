@@ -6,5 +6,5 @@
 * NVIDIA GeForce RTX 3060 Laptop GPU (gpu)
 
 ##  CUDA GEMM Convolution
-	- GEMM Convolution
-	- process : im2col kernel -> Matrix Multiplication(cublas) -> col2im kernel
+- GEMM Convolution
+- process : im2col kernel -> Matrix Multiplication(cublas) -> col2im kernel
